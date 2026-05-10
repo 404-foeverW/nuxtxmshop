@@ -31,7 +31,7 @@
           ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button size="default" type="primary" @click="Register" style="width:100%;">注册</el-button>
+          <el-button size="default" type="primary" @click="toRegisterUser" style="width:100%;">注册</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -47,9 +47,9 @@ const props = defineProps({
         default: false,
     }
 })
-watch(props.register, (newVal, oldVal) => {
-    if (val) {
-        isRegister.value = val;
+watch(() => props.register, (newVal, oldVal) => {
+    if (newVal) {
+        isRegister.value = newVal;
     }
 })
 const emits = defineEmits(['fromChild']);
@@ -58,7 +58,7 @@ const ruleForm = ref(null);
 
 const isRegister = ref(props.register);
 watch(isRegister, (newVal, oldVal) => {
-    if (!val) {
+    if (!newVal) {
         ruleForm.value.resetFields();
         emits('fromChild', newVal);
     }
@@ -81,18 +81,18 @@ async function validateName(rule, value, callback) {
     // 用户名以字母开头,长度在5-16之间,允许字母数字下划线
     const userNameRule = /^[a-zA-Z][a-zA-Z0-9_]{4,15}$/;
     if (userNameRule.test(value)) {
-    //判断数据库中是否已经存在该用户名
+        //判断数据库中是否已经存在该用户名
         let res = await net('/api/users/findUserName', {
             method: 'POST',
             body: {
                 userName: RegisterUser.value.name
             }
         })
-        if (res.data.code == "001") {
-            ruleForm.value.validateField("checkPass");
+        if (res.code == "001") {
+            // await ruleForm.value.validateField("name");
             return callback();
         } else {
-            return callback(new Error(res.data.msg));
+            return callback(new Error(res.msg));
         }
     } else {
         return callback(new Error("字母开头,长度5-16之间,允许字母数字下划线"));
@@ -105,7 +105,7 @@ async function validatePass(rule, value, callback) {
     // 密码以字母开头,长度在6-18之间,允许字母数字和下划线
     const passwordRule = /^[a-zA-Z]\w{5,17}$/;
     if (passwordRule.test(value)) {
-        ruleForm.value.validateField("checkPass");
+        // await ruleForm.value.validateField("pass");
         return callback();
     } else {
         return callback(
@@ -119,14 +119,14 @@ async function validateConfirmPass(rule, value, callback) {
     }
     // 校验是否以密码一致
     if (RegisterUser.value.pass != "" && value === RegisterUser.value.pass) {
-        ruleForm.value.validateField("checkPass");
+        // await ruleForm.value.validateField("confirmPass");
         return callback();
     } else {
         return callback(new Error("两次输入的密码不一致"));
     }
 }
 
-function Register() {
+function toRegisterUser() {
     ruleForm.value.validate(async (valid) => {
         if (!valid) return false;
         let res = await net('/api/users/register', {
@@ -136,11 +136,11 @@ function Register() {
                 password: RegisterUser.value.pass
             }
         })
-        if (res.data.code == "001") {
-            ElNotification.success(res.data.msg);
+        if (res.code == "001") {
+            ElNotification.success(res.msg);
             isRegister.value = false;
         } else {
-            ElNotification.error(res.data.msg);
+            ElNotification.error(res.msg);
         }
     })
 }

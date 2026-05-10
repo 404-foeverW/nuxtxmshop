@@ -42,39 +42,43 @@ const rules = ref({
     name: [{ validator: validateName, trigger: "blur" }],
     pass: [{ validator: validatePass, trigger: "blur" }]
 })
-const { getShowLogin, setShowLogin, setUser } = userStore();
+const userstore = userStore();
+const { getShowLogin } = storeToRefs(userstore);
+const { setUser, setShowLogin } = userstore;
 
 const isLogin = computed({
     get() {
-        return getShowLogin;
+        return getShowLogin.value;
     },
     set(val) {
+        console.log('val', val);
         ruleForm.value.resetFields();
         setShowLogin(val);
     }
 })
 
 
-function validateName(rule, value, callback) {
+async function validateName(rule, value, callback) {
     if(!value) {
         return callback(new Error("请输入用户名"));
     }
+    console.log('validateName');
     // 用户名以字母开头,长度在5-16之间,允许字母数字下划线
     const userNameRule = /^[a-zA-Z][a-zA-Z0-9_]{4,15}$/;
     if(userNameRule.test(value)) {
-        ruleForm.value.validateField("checkPass");
+        // await ruleForm.value.validateField("name");
         return callback();
     }else {
         return callback(new Error("字母开头,长度5-16之间,允许字母数字下划线"));
     }
 }
-function validatePass(rule, value, callback) {
+async function validatePass(rule, value, callback) {
     if(value === "") {
         return callback(new Error("请输入密码"));
     }
     const passwordRule = /^[a-zA-Z]\w{5,17}$/;
     if (passwordRule.test(value)) {
-        ruleForm.value.validateField("checkPass");
+        // await ruleForm.value.validateField("pass");
         return callback();
     } else {
         return callback(
@@ -95,21 +99,22 @@ function Login() {
                 }
             })
             console.log(res);
-            if (res.data.code === "001") {
+            if (res.code === "001") {
                 // 隐藏登录组件
                 isLogin.value = false;
+                console.log(isLogin.value);
                 // 登录信息存到本地
-                let user = JSON.stringify(res.data.user);
+                let user = JSON.stringify(res.user);
                 localStorage.setItem("user", user);
                 // 登录信息存到vuex
-                setUser(res.data.user);
+                setUser(res.user);
                 // 弹出通知框提示登录成功信息
-                ElNotification.success(res.data.msg);
+                ElNotification.success(res.msg);
             } else {
                 // 清空输入框的校验状态
                 ruleForm.value.resetFields();
                 // 弹出通知框提示登录失败信息
-                ElNotification.error(res.data.msg);
+                ElNotification.error(res.msg);
             }
         } catch (error) {
             console.log(error);

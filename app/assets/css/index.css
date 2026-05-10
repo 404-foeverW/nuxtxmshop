@@ -5,7 +5,6 @@
  * @LastEditors: hai-27
  * @LastEditTime: 2020-02-27 00:46:58
  */
-
 .main-box {
   background-color: #f5f5f5;
   padding-bottom: 20px;
@@ -60,11 +59,13 @@
 }
 
 .box-bd {
+  display: flex;
+  gap: 10px;
   height: 615px;
 }
 
 .box-bd .promo-list {
-  float: left;
+  /* float: left; */
   height: 615px;
   width: 234px;
 }
@@ -96,7 +97,7 @@
 }
 
 .box-bd .list {
-  float: left;
+  /* float: left; */
   height: 615px;
   width: 991px;
 }

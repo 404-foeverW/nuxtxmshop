@@ -14,10 +14,12 @@
                             <el-popover placement="top" width="180" v-model="visible">
                                 <p>确定退出登录吗？</p>
                                 <div style="text-align: right; margin: 10px 0 0">
-                                <el-button size="mini" text @click="visible = false">取消</el-button>
-                                <el-button type="primary" size="mini" @click="logout">确定</el-button>
+                                    <el-button size="small" text @click="visible = false">取消</el-button>
+                                    <el-button type="primary" size="small" @click="logout">确定</el-button>
                                 </div>
-                                <el-button text slot="reference">{{getUser.userName}}</el-button>
+                                <template #reference>
+                                    <el-button text slot="reference">{{getUser.userName}}</el-button>
+                                </template>
                             </el-popover>
                         </li>
                         <li>
@@ -49,9 +51,9 @@
                         </nuxt-link>
                     </div>
                     <div class="menu_item">
-                        <el-menu-item style="padding: 0 20px;" index="1" route="/">首页</el-menu-item>
-                        <el-menu-item style="padding: 0 20px;" index="2" route="/goods">全部商品</el-menu-item>
-                        <el-menu-item style="padding: 0 20px;" index="3" route="/about">关于我们</el-menu-item>
+                        <el-menu-item style="padding: 0 20px;" index="/" route="/">首页</el-menu-item>
+                        <el-menu-item style="padding: 0 20px;" index="/goods" route="/goods">全部商品</el-menu-item>
+                        <el-menu-item style="padding: 0 20px;" index="/about" route="/about">关于我们</el-menu-item>
                     </div>
                     <div class="so">
                         <el-input placeholder="请输入搜索内容" v-model="search">
@@ -107,12 +109,16 @@ const instance = getCurrentInstance();
 const router = useRouter();
 const net = request();
 const route = useRoute();
-const { getUser, setUser, setShowLogin } = userStore();
-const { getNum, setShoppingCart } = shoppingCartStore();
+const userstore = userStore();
+const shoppingCart = shoppingCartStore();
+const { getUser } = storeToRefs(userstore);
+const { setUser, setShowLogin } = userstore;
+const { getNum } = storeToRefs(shoppingCart);
+const { setShoppingCart } = shoppingCart;
 const asyncLoginComponent = ref(null);
 const asyncRegisterComponent = ref(null);
 
-const activeIndex = ref('');
+const activeIndex = ref('/');
 const search = ref('');
 const register = ref(false);
 const visible = ref(false);
@@ -130,13 +136,13 @@ watch(getUser, async (newVal, oldVal) => {
                 user_id: newVal.user_id
             }
         })
-        if(res.data.code === '001') {
-            setShoppingCart(res.data.shoppingCartData);
+        if(res.code === '001') {
+            setShoppingCart(res.shoppingCartData);
         }else {
-            ElNotification.error(res.data.msg);
+            ElNotification.error(res.msg);
         }   
     } catch (error) {
-        console.log(error);
+        console.log('error', error);
     }
 })
 function login() {
@@ -155,8 +161,9 @@ function logout() {
     ElNotification.success("成功退出登录");
 }
 function isRegister(val) {
-    console.log(val);
+    // console.log(val);
     register.value = val;
+    if(!val) return;
     asyncRegisterComponent.value = useCreateAsyncComponent(
         () => import('~/components/MyRegister.vue'),
         instance,
@@ -182,11 +189,12 @@ onMounted(() => {
     }
 })
 onBeforeUnmount(() => {
-    asyncLoginComponent.value.destroy();
-    asyncRegisterComponent.value.destroy();
+    asyncLoginComponent.value && asyncLoginComponent.value.destroy();
+    asyncRegisterComponent.value && asyncRegisterComponent.value.destroy();
 })
 onBeforeUpdate(() => {
     activeIndex.value = route.path;
+    // console.log(activeIndex.value);
 })
 </script>
 <style scoped>
@@ -358,19 +366,35 @@ a:hover {
 .el_main_box {
     flex: 1;
 }
-.el_container_box {
+/* .el_container_box {
     min-height: 100vh;
-}
+} */
 /* .el-menu-demo:deep(.el-menu--horizontal > .el-menu-item:not(.is-disabled):hover, .el-menu--horizontal > .el-menu-item:not(.is-disabled):focus) {
     border-bottom-color: rgb(64, 158, 255);
     color: rgb(64, 158, 255);
     background-color: #fff;
 } */
-:deep(.el-menu--horizontal .el-menu-item:not(.is-disabled):hover, .el-menu--horizontal .el-menu-item:not(.is-disabled):focus) {
+.el-menu-item.is-active {
     border-bottom-color: rgb(64, 158, 255);
     color: rgb(64, 158, 255);
     background-color: #fff;
     outline: initial;
     border-bottom: 2px solid #409EFF;
+}
+.el-menu-item {
+    height: 60px;
+    line-height: 60px;
+    margin: 0;
+    /* border-bottom: 2px solid transparent; */
+    color: #909399;
+    margin-bottom: 2px;
+}
+:deep(.el-menu--horizontal .el-menu-item:not(.is-disabled):hover, .el-menu--horizontal .el-menu-item:not(.is-disabled):focus) {
+    /* border-bottom-color: rgb(64, 158, 255); */
+    /* color: rgb(64, 158, 255); */
+    color: #000;
+    background-color: #fff;
+    outline: initial;
+    /* border-bottom: 2px solid #409EFF; */
 }
 </style>
