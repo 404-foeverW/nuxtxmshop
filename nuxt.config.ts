@@ -5,12 +5,12 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   css: ['~/assets/css/global.css'],
-  modules: ['@pinia/nuxt', ['@element-plus/nuxt', {
+  modules: ['@pinia/nuxt', '@nuxtjs/mdc', ['@element-plus/nuxt', {
     elementPlus: {
       importStyle: 'css',
       installMethods: ['ElNotification']
     },
-  }]],
+  }], '@nuxtjs/mdc'],
   runtimeConfig: {
     public: {
       baseUrl: ''

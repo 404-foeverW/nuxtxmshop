@@ -65,9 +65,7 @@
                 </el-menu>
             </el-header>
             <el-main class="el_main_box">
-                <keep-alive>
-                    <slot></slot>
-                </keep-alive>
+                <slot></slot>
             </el-main>
             <el-footer height="fit-content">
                 <div class="footer">
@@ -118,7 +116,10 @@ const { setShoppingCart } = shoppingCart;
 const asyncLoginComponent = ref(null);
 const asyncRegisterComponent = ref(null);
 
-const activeIndex = ref('/');
+const activeIndex = ref('');
+watch(route, (newVal) => {
+    activeIndex.value = newVal.path;
+})
 const search = ref('');
 const register = ref(false);
 const visible = ref(false);
@@ -187,15 +188,16 @@ onMounted(() => {
       // 如果已经登录，设置vuex登录状态
       setUser(JSON.parse(localStorage.getItem("user")));
     }
+    activeIndex.value = route.path;
 })
 onBeforeUnmount(() => {
     asyncLoginComponent.value && asyncLoginComponent.value.destroy();
     asyncRegisterComponent.value && asyncRegisterComponent.value.destroy();
 })
-onBeforeUpdate(() => {
-    activeIndex.value = route.path;
-    // console.log(activeIndex.value);
-})
+// onBeforeUpdate(() => {
+//     activeIndex.value = route.path;
+//     // console.log(activeIndex.value);
+// })
 </script>
 <style scoped>
 /* 全局CSS */

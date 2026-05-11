@@ -103,6 +103,9 @@
   </div>
 </template>
 <script setup>
+defineOptions({
+    name: 'IndexPage'
+})
 import { request } from '~/utils/request.js';
 const net = request();
 // const instance = getCurrentInstance();
