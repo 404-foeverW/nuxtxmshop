@@ -99,6 +99,7 @@ import { request } from '~/utils/request';
 const route = useRoute();
 const shopCartInfo = shoppingCartStore();
 const userInfo = userStore();
+// console.log(userInfo.getUser.user_id);
 const net  = request();
 const runtimeConfig = useRuntimeConfig();
 const $target = computed(() => runtimeConfig.public.baseUrl+'/');

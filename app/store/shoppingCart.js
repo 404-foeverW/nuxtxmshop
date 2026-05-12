@@ -129,8 +129,8 @@ export const shoppingCartStore = defineStore('shoppingCart', () => {
     }
     function checkAll(data) {
         for (let i = 0; i < shoppingCart.value.length; i++) {
-            const temp = shoppingCart.value[i];
-            temp.check = data;
+            // const temp = shoppingCart.value[i];
+            shoppingCart.value[i].check = data;
         }
     }
 
