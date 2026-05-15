@@ -110,10 +110,13 @@ import { request } from '~/utils/request.js';
 const net = request();
 // const instance = getCurrentInstance();
 const runtimeConfig = useRuntimeConfig();
+// console.log('import.meta.client', '');
 
 const $target = computed(() => runtimeConfig.public.baseUrl+'/');
+// const $target = 'http://localhost:3000';
+
 // const $target = ;
-// console.log('target', $target);
+// console.log('target', process.env);
 const state = reactive({
     phoneList: '',
     miTvList: '',

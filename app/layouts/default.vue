@@ -124,6 +124,8 @@ const search = ref('');
 const register = ref(false);
 const visible = ref(false);
 
+console.log('----default------');
+
 watch(getUser, async (newVal, oldVal) => {
     if (newVal === "") {
         // 用户没有登录

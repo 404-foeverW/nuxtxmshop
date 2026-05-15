@@ -8,7 +8,8 @@
             <el-button type="primary" size="small" @click="deleteCollect(item.product_id)">确定</el-button>
           </div>
           <template #reference>
-            <i class="el-icon-close delete" v-show="isDelete"></i>
+            <!-- <i class="el-icon-close delete" v-show="isDelete"></i> -->
+            <el-icon class="delete" v-show="isDelete"><Close /></el-icon>
           </template>
         </el-popover>
         <nuxt-link :to="{ path: '/goods/details', query: {productID:item.product_id} }">
@@ -34,10 +35,24 @@
   </div>
 </template>
 <script setup>
+import { Close } from '@element-plus/icons-vue';
 import { userStore } from '~/store/user';
 import { request } from '~/utils/request.js';
 const net = request();
-const props = defineProps(["list", "isMore", "isDelete"]);
+const props = defineProps({
+  list: {
+    type: Array,
+    default: () => []
+  },
+  isMore: {
+    type: Boolean,
+    default: false
+  },
+  isDelete: {
+    type: Boolean,
+    default: false
+  }
+});
 const userstore = userStore();
 const { getUser } = storeToRefs(userstore);
 const runtimeConfig = useRuntimeConfig();

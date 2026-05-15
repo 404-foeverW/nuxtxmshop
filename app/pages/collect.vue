@@ -31,6 +31,13 @@ const userInfo = userStore();
 const collectList = ref([]);
 const { data } = await useAsyncData('collectInfo', async () => {
     let list = [];
+    console.log('userInfo.getUser?.user_id', userInfo.getUser?.user_id);
+    if(!userInfo.getUser?.user_id) {
+        ElNotification.error('请先登录');
+        return {
+            list
+        }
+    }
     let res = await net.post('/api/user/collect/getCollect', {
         body: {
             user_id: userInfo.getUser.user_id
@@ -39,10 +46,12 @@ const { data } = await useAsyncData('collectInfo', async () => {
     if(res.code === '001') {
         list = res.collectList;
     }
-    console.log('res.code', list);
+    console.log('res.code', res);
     return {
         list
     }
+}, {
+    // server: false
 })
 watch(data, (newVal) => {
     console.log('-----newVal-----', newVal);

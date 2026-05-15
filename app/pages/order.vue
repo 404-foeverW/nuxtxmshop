@@ -103,6 +103,10 @@ watch(orders, (newVal) => {
 })
 onActivated(async () => {
     console.log('onActivated');
+    if(!userInfo.getUser?.user_id) {
+      ElNotification.error('请先登录');
+      return;
+    }
     let res = await net.post('/api/user/order/getOrder', {
         body: {
             user_id: userInfo.getUser.user_id

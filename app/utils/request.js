@@ -4,13 +4,15 @@ export const request = () => {
     const runtimeConfig  = useRuntimeConfig();
     // const token = useCookie('token');
     const router = useRouter();
-    const baseURL = import.meta.client ? '' : runtimeConfig .public.baseUrl;
+    const baseURL = import.meta.client ? '' : runtimeConfig.public.baseUrl;
+    // const baseURL = 'http://localhost:3000';
     // console.log('最终使用的 baseURL:', baseURL);
     const rawFetch = $fetch.create({
         baseURL: baseURL,
         timeout: 15000,
         // credentials: 'include',
         async onRequest({request, options}) {
+            console.log("options", options);
             options.headers = new Headers(options.headers);
 
             if(options.tokens) {
@@ -20,9 +22,12 @@ export const request = () => {
             if(!options.headers.has('content-type') && !(options.body instanceof FormData)) {
                 options.headers.set('content-type', 'application/json');
             }
+            if(import.meta.server) {
+                options.headers.set('Cookie', useRequestEvent().node.req.headers.cookie);
+            }
         },
         async onRequestError({ error }) {
-            // console.error(`[${import.meta.client ? '客户端' : '服务器端'}] 请求失败:`);
+            console.error(`[${import.meta.client ? '客户端' : '服务器端'}] 请求失败: ${error}`);
             // console.log(error);
             if (import.meta.client) {
                 router.push('/error');
@@ -30,7 +35,7 @@ export const request = () => {
             // router.push('/error');
         },
         async onResponse({ response }) {
-            // console.log(`[${import.meta.client ? '客户端' : '服务器端'}] 请求成功:`, response.status);
+            // console.log(`[${import.meta.client ? '客户端' : '服务器端'}] 响应成功:`, response.status);
             // console.log('response', response);
             const result = response._data;
             if(result.code === "401") {
@@ -46,8 +51,8 @@ export const request = () => {
             }
             return result;
         },
-        async onResponseError({ error }) {
-            console.error(`[${import.meta.client ? '客户端' : '服务器端'}] 请求失败:`, error);
+        async onResponseError({ response }) {
+            console.error(`[${import.meta.client ? '客户端' : '服务器端'}] 响应失败:`, response.status);
             if (import.meta.client) {
                 router.push('/error');
             }

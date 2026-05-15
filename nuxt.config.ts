@@ -13,7 +13,7 @@ export default defineNuxtConfig({
   }], '@nuxtjs/mdc'],
   runtimeConfig: {
     public: {
-      baseUrl: ''
+      baseUrl: 'http://localhost:3000'
     }
   },
   devServer: {
