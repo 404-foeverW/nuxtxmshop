@@ -137,10 +137,12 @@ function toRegisterUser() {
             }
         })
         if (res.code == "001") {
-            ElNotification.success(res.msg);
+            // ElNotification.success(res.msg);
+            await useElNotification.success(res.msg);
             isRegister.value = false;
         } else {
-            ElNotification.error(res.msg);
+            // ElNotification.error(res.msg);
+            await useElNotification.error(res.msg);
         }
     })
 }

@@ -47,7 +47,7 @@ export const userStore = defineStore('user', () => {
         }
         try {
             const userInfo = localStorage.getItem('user');
-            user.value = JSON.parse(userInfo);
+            if(userInfo) user.value = JSON.parse(userInfo);
         } catch (error) {
             console.log('本地初始化失败', error);
         }

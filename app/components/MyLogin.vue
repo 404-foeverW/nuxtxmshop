@@ -109,12 +109,14 @@ function Login() {
                 // 登录信息存到vuex
                 setUser(res.user);
                 // 弹出通知框提示登录成功信息
-                ElNotification.success(res.msg);
+                // ElNotification.success(res.msg);
+                await useElNotification.success(res.msg);
             } else {
                 // 清空输入框的校验状态
                 ruleForm.value.resetFields();
                 // 弹出通知框提示登录失败信息
-                ElNotification.error(res.msg);
+                // ElNotification.error(res.msg);
+                await useElNotification.error(res.msg);
             }
         } catch (error) {
             console.log(error);

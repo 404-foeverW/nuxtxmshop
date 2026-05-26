@@ -5,6 +5,7 @@
             <div class="block">
                 <el-carousel height="460px">
                     <el-carousel-item v-for="item in carousel" :key="item.carousel_id">
+                        <!-- <img style="height:460px;" v-lazy="$target + item.imgPath" :alt="item.describes" /> -->
                         <img style="height:460px;" :src="$target + item.imgPath" :alt="item.describes" />
                     </el-carousel-item>
                 </el-carousel>
@@ -21,7 +22,8 @@
                     <div class="box-bd">
                         <div class="promo-list">
                             <nuxt-link to>
-                                <img :src="$target +'public/imgs/phone/phone.png'" />
+                                <!-- <img :src="$target +'public/imgs/phone/phone.png'" /> -->
+                                <img v-lazy="$target +'public/imgs/phone/phone.png'" />
                             </nuxt-link>
                         </div>
                         <div class="list">
@@ -50,10 +52,10 @@
                     <div class="promo-list">
                         <ul>
                             <li>
-                                <img :src="$target +'public/imgs/appliance/appliance-promo1.png'" />
+                                <img v-lazy="$target +'public/imgs/appliance/appliance-promo1.png'" />
                             </li>
                             <li>
-                                <img :src="$target +'public/imgs/appliance/appliance-promo2.png'" />
+                                <img v-lazy="$target +'public/imgs/appliance/appliance-promo2.png'" />
                             </li>
                         </ul>
                     </div>
@@ -85,10 +87,10 @@
                     <div class="promo-list">
                         <ul>
                             <li>
-                            <img :src="$target +'public/imgs/accessory/accessory-promo1.png'" alt />
+                            <img v-lazy="$target +'public/imgs/accessory/accessory-promo1.png'" alt />
                             </li>
                             <li>
-                            <img :src="$target +'public/imgs/accessory/accessory-promo2.png'" alt />
+                            <img v-lazy="$target +'public/imgs/accessory/accessory-promo2.png'" alt />
                             </li>
                         </ul>
                     </div>
@@ -111,7 +113,6 @@ const net = request();
 // const instance = getCurrentInstance();
 const runtimeConfig = useRuntimeConfig();
 // console.log('import.meta.client', '');
-
 const $target = computed(() => runtimeConfig.public.baseUrl+'/');
 // const $target = 'http://localhost:3000';
 
@@ -223,6 +224,19 @@ watch(data, (newVal) => {
     deep: true,
     immediate: true
 })
+useHead({
+    link: [
+        {
+            rel: 'preload',
+            as: 'image',
+            href: `${$target.value + carousel.value[0].imgPath}`,
+            fetchpriority: 'high'
+        }
+    ]
+})
+
+const MyList = defineAsyncComponent(() => import('~/components/MyList.vue'));
+
 // 获取家电模块子组件传过来的数据
 function getChildMsg(val) {
     applianceActive.value = val;

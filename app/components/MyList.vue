@@ -5,7 +5,8 @@
         <el-popover placement="top">
           <p>确定删除吗？</p>
           <div style="text-align: right; margin: 10px 0 0">
-            <el-button type="primary" size="small" @click="deleteCollect(item.product_id)">确定</el-button>
+            <button class="btn_confirm" @click="deleteCollect(item.product_id)">确定</button>
+            <!-- <el-button type="primary" size="small" @click="deleteCollect(item.product_id)">确定</el-button> -->
           </div>
           <template #reference>
             <!-- <i class="el-icon-close delete" v-show="isDelete"></i> -->
@@ -13,7 +14,8 @@
           </template>
         </el-popover>
         <nuxt-link :to="{ path: '/goods/details', query: {productID:item.product_id} }">
-          <img :src="$target +item.product_picture" alt />
+          <!-- <img :src="$target +item.product_picture" alt /> -->
+          <img v-lazy="$target +item.product_picture" alt />
           <h2>{{item.product_name}}</h2>
           <h3>{{item.product_title}}</h3>
           <p>
@@ -91,11 +93,13 @@ async function deleteCollect(product_id) {
                 }
             }
             // 提示删除成功信息
-            ElNotification.success(res.msg);
+            // ElNotification.success(res.msg);
+            await useElNotification.success(res.msg);
             break;
         default:
             // 提示删除失败信息
-            ElNotification.error(res.msg);
+            // ElNotification.error(res.msg);
+            await useElNotification.error(res.msg);
     }
 }
 </script>
@@ -179,5 +183,14 @@ async function deleteCollect(product_id) {
 }
 .myList ul li .delete:hover {
   color: #ff6700;
+}
+.btn_confirm {
+    align-items: center;
+    display: inline-flex;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #4149dc;
+    color: #fff;
+    border-radius: 4px;
 }
 </style>

@@ -40,7 +40,10 @@ export const request = () => {
             const result = response._data;
             if(result.code === "401") {
                 if (import.meta.client) {
-                    ElNotification.error({
+                    // ElNotification.error({
+                    //     message: result.msg
+                    // })
+                    await useElNotification.error({
                         message: result.msg
                     })
                 }

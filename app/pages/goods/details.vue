@@ -147,20 +147,24 @@ async function addShoppingCart() {
         case "001":
             // 新加入购物车成功
             shopCartInfo.unshiftShoppingCart(res.shoppingCartData[0]);
-            ElNotification.success(res.msg);
+            // ElNotification.success(res.msg);
+            await useElNotification.success(res.msg);
             break;
         case "002":
             // 该商品已经在购物车，数量+1
             shopCartInfo.addShoppingCartNum(productID.value);
-            ElNotification.success(res.msg);
+            // ElNotification.success(res.msg);
+            await useElNotification.success(res.msg);
             break;
         case "003":
             // 商品数量达到限购数量
             dis.value = true;
-            ElNotification.error(res.msg);
+            // ElNotification.error(res.msg);
+            await useElNotification.error(res.msg);
             break;
         default:
-            ElNotification.error(res.msg);
+            // ElNotification.error(res.msg);
+            await useElNotification.error(res.msg);
     }
 }
 async function addCollect() {

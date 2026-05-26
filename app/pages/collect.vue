@@ -33,7 +33,8 @@ const { data } = await useAsyncData('collectInfo', async () => {
     let list = [];
     console.log('userInfo.getUser?.user_id', userInfo.getUser?.user_id);
     if(!userInfo.getUser?.user_id) {
-        ElNotification.error('请先登录');
+        // ElNotification.error('请先登录');
+        await useElNotification.error('请先登录');
         return {
             list
         }

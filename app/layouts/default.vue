@@ -5,20 +5,25 @@
                 <div class="nav">
                     <ul>
                         <li v-if="!getUser">
-                            <el-button text @click="login">登录</el-button>
+                            <button class="btn_login" @click="login">登录</button>
+                            <!-- <el-button text @click="login">登录</el-button> -->
                             <span class="sep">|</span>
-                            <el-button text @click="isRegister(true)">注册</el-button>
+                            <button class="btn_register" @click="isRegister(true)">注册</button>
+                            <!-- <el-button text @click="isRegister(true)">注册</el-button> -->
                         </li>
                         <li v-else>
                             欢迎
                             <el-popover placement="top" width="180" v-model="visible">
                                 <p>确定退出登录吗？</p>
                                 <div style="text-align: right; margin: 10px 0 0">
-                                    <el-button size="small" text @click="visible = false">取消</el-button>
-                                    <el-button type="primary" size="small" @click="logout">确定</el-button>
+                                    <button class="btn_cancle" @click="visible = false">取消</button>
+                                    <button class="btn_confirm" @click="logout">确定</button>
+                                    <!-- <el-button size="small" text @click="visible = false">取消</el-button> -->
+                                    <!-- <el-button type="primary" size="small" @click="logout">确定</el-button> -->
                                 </div>
                                 <template #reference>
-                                    <el-button text slot="reference">{{getUser.userName}}</el-button>
+                                    <button slot="reference" class="btn_login">{{getUser.userName}}</button>
+                                    <!-- <el-button text slot="reference">{{getUser.userName}}</el-button> -->
                                 </template>
                             </el-popover>
                         </li>
@@ -56,11 +61,23 @@
                         <el-menu-item style="padding: 0 20px;" index="/about" route="/about">关于我们</el-menu-item>
                     </div>
                     <div class="so">
-                        <el-input placeholder="请输入搜索内容" v-model="search">
+                        <div class="input_box">
+                            <input class="input_inner" type="text" placeholder="请输入搜索内容" v-model="search">
+                            <div class="input_btn_box">
+                                <button class="btn_search" @click="searchClick">
+                                    <el-icon><Search /></el-icon>
+                                </button>
+                            </div>
+                            
+                        </div>
+                        
+                        <!-- <el-input placeholder="请输入搜索内容" v-model="search">
                             <template #append>
-                                <el-button :icon="Search" @click="searchClick"></el-button>
+                                <button class="btn_search" @click="searchClick">
+                                    <el-icon><Search /></el-icon>
+                                </button>
                             </template>
-                        </el-input>
+                        </el-input> -->
                     </div>
                 </el-menu>
             </el-header>
@@ -103,6 +120,8 @@ import { Search, ShoppingCart } from '@element-plus/icons-vue';
 import { userStore } from '~/store/user.js';
 import { shoppingCartStore } from '~/store/shoppingCart.js';
 import { request } from '~/utils/request.js';
+// import { useElNotification } from '~/composables/useElNotification.js';
+// console.log(useElNotification);
 const instance = getCurrentInstance();
 const router = useRouter();
 const net = request();
@@ -142,7 +161,9 @@ watch(getUser, async (newVal, oldVal) => {
         if(res.code === '001') {
             setShoppingCart(res.shoppingCartData);
         }else {
-            ElNotification.error(res.msg);
+            // ElNotification.error(res.msg);
+            await useElNotification.error(res.msg);
+
         }   
     } catch (error) {
         console.log('error', error);
@@ -155,13 +176,15 @@ function login() {
         instance
     );
 }
-function logout() {
+async function logout() {
     visible.value = false;
     // 清空本地登录信息
     localStorage.setItem("user", "");
     // 清空vuex登录信息
     setUser("");
-    ElNotification.success("成功退出登录");
+    // ElNotification.success("成功退出登录");
+    await useElNotification.success("成功退出登录");
+
 }
 function isRegister(val) {
     // console.log(val);
@@ -400,5 +423,78 @@ a:hover {
     background-color: #fff;
     outline: initial;
     /* border-bottom: 2px solid #409EFF; */
+}
+.btn_login, .btn_register {
+    align-items: center;
+    display: inline-flex;
+    background-color: transparent;
+    color: #b0b0b0;
+    cursor: pointer;
+    font-size: 14px;
+}
+.btn_login:hover, .btn_register:hover {
+    color: #fff;
+}
+.btn_cancle, .btn_confirm {
+    align-items: center;
+    display: inline-flex;
+    background-color: transparent;
+    font-size: 14px;
+    color: #b0b0b0;
+    cursor: pointer;
+}
+.btn_confirm {
+    background-color: #4149dc;
+    color: #fff;
+    border-radius: 4px;
+    margin-left: 10px;
+}
+.input_btn_box {
+    background-color: #f5f7fa;
+    color: #909399;
+    border-radius: 4px;
+    white-space: nowrap;
+    justify-content: center;
+    align-items: center;
+    min-height: 100%;
+    height: calc(32px - 2px);
+    padding: 0 20px;
+    display: inline-flex;
+    position: relative;
+}
+.btn_search {
+    cursor: pointer;
+}
+.input_box {
+    background-color: #fff;
+    border-radius: 4px;
+    cursor: text;
+    transition: box-shadow .2s cubic-bezier(.645, .045, .355, 1);
+    box-shadow: 0 0 0 1px #dcdfe6 inset;
+    background-image: none;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+    padding: 1px 0px 1px 11px;
+    display: inline-flex;
+    transform: translate(0, 0);
+}
+.input_inner {
+    /* webkit-appearance: none; */
+    width: 100%;
+    color: #606266;
+    font-size: inherit;
+    height: calc(32px - 2px);
+    line-height: calc(32px - 2px);
+    box-sizing: border-box;
+    background: 0 0;
+    border: none;
+    outline: none;
+    flex-grow: 1;
+    padding: 0;
+}
+.input_inner::placeholder {
+    color: #606266;
+    font-size: 14px;
 }
 </style>

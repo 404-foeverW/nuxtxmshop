@@ -166,20 +166,23 @@ async function addOrder() {
                 deleteShoppingCart(temp.id);
             }
             // 提示结算结果
-            ElNotification.success(res.msg);
+            // ElNotification.success(res.msg);
+            await useElNotification.success(res.msg);
             // 跳转我的订单页面
             router.push({ path: "/order" });
             break;
         default:
             // 提示失败信息
-            ElNotification.error(res.msg);
+            // ElNotification.error(res.msg);
+            await useElNotification.error(res.msg);
     }
 }
 
-function init() {
+async function init() {
     // 如果没有勾选购物车商品直接进入确认订单页面,提示信息并返回购物车
     if (getCheckNum.value < 1) {
-        ElNotification.error("请勾选商品后再结算");
+        // ElNotification.error("请勾选商品后再结算");
+        await useElNotification.error("请勾选商品后再结算");
         router.push({ path: "/shoppingCart" });
     }
 }

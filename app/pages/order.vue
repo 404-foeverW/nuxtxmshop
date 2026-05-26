@@ -104,7 +104,8 @@ watch(orders, (newVal) => {
 onActivated(async () => {
     console.log('onActivated');
     if(!userInfo.getUser?.user_id) {
-      ElNotification.error('请先登录');
+      // ElNotification.error('请先登录');
+      await useElNotification.error('请先登录');
       return;
     }
     let res = await net.post('/api/user/order/getOrder', {
@@ -116,7 +117,8 @@ onActivated(async () => {
     if(res.code === "001") {
         orders.value = res.orders;
     }else {
-        ElNotification.error(res.msg);
+        // ElNotification.error(res.msg);
+        await useElNotification.error(res.msg);
     }
 })
 </script>

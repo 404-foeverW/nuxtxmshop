@@ -155,11 +155,13 @@ async function handleChange(currentValue, key, productID) {
                 val: currentValue,
             });
             // 提示更新成功信息
-            ElNotification.success(res.msg);
+            // ElNotification.success(res.msg);
+            await useElNotification.success(res.msg);
             break;
         default:
             // 提示更新失败信息
-            ElNotification.error(res.msg);
+            // ElNotification.error(res.msg);
+            await useElNotification.error(res.msg);
     }
 }
 function checkChange(val, key) {
@@ -178,11 +180,13 @@ async function deleteItem(e, id, productID) {
             // 更新vuex状态
             deleteShoppingCart(id);
             // 提示删除成功信息
-            ElNotification.success(res.msg);
+            // ElNotification.success(res.msg);
+            await useElNotification.success(res.msg);
             break;
         default:
             // 提示删除失败信息
-            ElNotification.error(res.msg);
+            // ElNotification.error(res.msg);
+            await useElNotification.error(res.msg);
     }
 }
 </script>
