@@ -26,31 +26,52 @@ export default defineNuxtConfig({
       baseUrl: 'http://localhost:3000'
     }
   },
+  site: {
+    url: "http://localhost:3000",
+    name: "localhost",
+    trailingSlash: false
+  },
   sitemap: {
-    urls: [
-      {
-        loc: '/index',
-        lastmod: '2026-05-26',
-        changefreq: 'weekly',
-        priority: 1
-      },
-      {
-        loc: '/collect',
-        lastmod: '2026-05-26',
-        changefreq: 'weekly',
-        priority: 0.8
-      },
-      {
-        loc: '/about',
-        lastmod: '2026-05-26',
-        changefreq: 'weekly',
-        priority: 0.8
-      }
-    ]
+    // urls: [
+    //   {
+    //     loc: '/collect',
+    //     lastmod: '2026-05-26',
+    //     changefreq: 'weekly',
+    //     priority: 0.8
+    //   },
+    //   {
+    //     loc: '/about',
+    //     lastmod: '2026-05-26',
+    //     changefreq: 'weekly',
+    //     priority: 0.8
+    //   }
+    // ],
+    // sources: ['/api/__sitemap__/urls'],
+    include: [
+      '/',
+      '/about',
+      '/collect',
+      '/shoppingCart'
+    ],
+    exclude: ['/goods/**'],
+    cacheMaxAgeSeconds: 6 * 60 * 60,
+    autoLastmod: true,
+    defaults: {
+      changefreq: "weekly",
+      priority: 0.8,
+      lastmod: new Date(),
+    },
+    xslColumns: [
+      { label: "URL", width: "50%" },
+      { label: "Last Modified", select: "sitemap:lastmod", width: "25%" },
+      { label: "Priority", select: "sitemap:priority", width: "12.5%" },
+      { label: "Change Frequency", select: "sitemap:changefreq", width: "12.5%" },
+    ],
   },
   robots: {
-    allow: '/',
-    disallow: ['/order', '/good', '/ConfirmOrder', '/shoppingCart'],
+    enabled: true,
+    // allow: '/',
+    disallow: ['/order', '/good', '/ConfirmOrder'],
     sitemap: 'https://location:3030/sitemap.xml'
   },
   devServer: {
@@ -68,7 +89,7 @@ export default defineNuxtConfig({
     compressPublicAssets: {
       gzip: true,
       brotli: true
-    }
+    },
     // logLevel: 'verbose'
   }
 })
